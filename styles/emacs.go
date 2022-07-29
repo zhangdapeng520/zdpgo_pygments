@@ -1,0 +1,51 @@
+package styles
+
+import (
+	"github.com/zhangdapeng520/zdpgo_pygments"
+)
+
+// Emacs style.
+var Emacs = Register(zdpgo_pygments.MustNewStyle("emacs", zdpgo_pygments.StyleEntries{
+	zdpgo_pygments.TextWhitespace:        "#bbbbbb",
+	zdpgo_pygments.Comment:               "italic #008800",
+	zdpgo_pygments.CommentPreproc:        "noitalic",
+	zdpgo_pygments.CommentSpecial:        "noitalic bold",
+	zdpgo_pygments.Keyword:               "bold #AA22FF",
+	zdpgo_pygments.KeywordPseudo:         "nobold",
+	zdpgo_pygments.KeywordType:           "bold #00BB00",
+	zdpgo_pygments.Operator:              "#666666",
+	zdpgo_pygments.OperatorWord:          "bold #AA22FF",
+	zdpgo_pygments.NameBuiltin:           "#AA22FF",
+	zdpgo_pygments.NameFunction:          "#00A000",
+	zdpgo_pygments.NameClass:             "#0000FF",
+	zdpgo_pygments.NameNamespace:         "bold #0000FF",
+	zdpgo_pygments.NameException:         "bold #D2413A",
+	zdpgo_pygments.NameVariable:          "#B8860B",
+	zdpgo_pygments.NameConstant:          "#880000",
+	zdpgo_pygments.NameLabel:             "#A0A000",
+	zdpgo_pygments.NameEntity:            "bold #999999",
+	zdpgo_pygments.NameAttribute:         "#BB4444",
+	zdpgo_pygments.NameTag:               "bold #008000",
+	zdpgo_pygments.NameDecorator:         "#AA22FF",
+	zdpgo_pygments.LiteralString:         "#BB4444",
+	zdpgo_pygments.LiteralStringDoc:      "italic",
+	zdpgo_pygments.LiteralStringInterpol: "bold #BB6688",
+	zdpgo_pygments.LiteralStringEscape:   "bold #BB6622",
+	zdpgo_pygments.LiteralStringRegex:    "#BB6688",
+	zdpgo_pygments.LiteralStringSymbol:   "#B8860B",
+	zdpgo_pygments.LiteralStringOther:    "#008000",
+	zdpgo_pygments.LiteralNumber:         "#666666",
+	zdpgo_pygments.GenericHeading:        "bold #000080",
+	zdpgo_pygments.GenericSubheading:     "bold #800080",
+	zdpgo_pygments.GenericDeleted:        "#A00000",
+	zdpgo_pygments.GenericInserted:       "#00A000",
+	zdpgo_pygments.GenericError:          "#FF0000",
+	zdpgo_pygments.GenericEmph:           "italic",
+	zdpgo_pygments.GenericStrong:         "bold",
+	zdpgo_pygments.GenericPrompt:         "bold #000080",
+	zdpgo_pygments.GenericOutput:         "#888",
+	zdpgo_pygments.GenericTraceback:      "#04D",
+	zdpgo_pygments.GenericUnderline:      "underline",
+	zdpgo_pygments.Error:                 "border:#FF0000",
+	zdpgo_pygments.Background:            " bg:#f8f8f8",
+}))
