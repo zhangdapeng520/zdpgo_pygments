@@ -7,14 +7,6 @@ import (
 	"strings"
 )
 
-/*
-@Time : 2022/7/28 17:58
-@Author : 张大鹏
-@File : main.go
-@Software: Goland2021.3.1
-@Description:
-*/
-
 func main() {
 	filePath := "examples/test_data/level1_1.java"
 	result, err := zdpgo_clearcode.ClearCode(filePath)
@@ -49,12 +41,34 @@ func main() {
 		} else if typeStr == "Keyword" { // 关键字
 			s += valueStr
 		} else if typeStr == "Name" { // 所有变量名称为“N”
+			fmt.Println("xxxxxxxxx", valueStr)
 			if valueStr != "" {
+				// 处理包含点的情况，比如：`a.b.c()`
+				if strings.Contains(valueStr, ".") {
+					arr := strings.Split(valueStr, ".")
+					for i := 0; i < len(arr)-1; i++ {
+						s += "N."
+					}
+				}
 				s += "N"
 			}
+		} else if typeStr == "NameClass" { // Java：所有的类名改为C
+			s += "C"
 		} else if typeStr == "NameVariable" { // PHP中的变量类型
+			fmt.Println("xxxxxxxxx", valueStr)
 			if valueStr != "" {
+				// 处理包含点的情况，比如：`a.b.c()`
+				if strings.Contains(valueStr, ".") {
+					arr := strings.Split(valueStr, ".")
+					for i := 0; i < len(arr)-1; i++ {
+						s += "N."
+					}
+				}
 				s += "N"
+			}
+		} else if typeStr == "NameAttribute" { // Java中的对象属性
+			if valueStr != "" {
+				s += "A"
 			}
 		} else if typeStr == "LiteralString" { // 所有双引号都变成S
 			// 双引号会连续出现3个：" 内容 "

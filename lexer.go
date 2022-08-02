@@ -143,18 +143,22 @@ func GetToken(lexer Lexer, content string) (string, error) {
 	for _, token := range tokenise.Tokens() {
 		// 获取类型字符串
 		typeStr := token.Type.String()
-		valueStr := strings.Trim(token.Value, " ")
-		//valueStr = strings.Trim(token.Value, "\r")
-		//valueStr = strings.Trim(token.Value, "\n")
+		valueStr := strings.TrimSpace(token.Value)
 
 		// 忽略空格和注释
 		if typeStr == "Text" { // 忽略空格和注释
 			result += ""
 		} else if typeStr == "Keyword" { // 关键字
 			result += valueStr
+		} else if typeStr == "NameClass" { // Java：所有的类名改为C
+			result += "C"
 		} else if typeStr == "Name" { // 所有变量名称为“N”
 			if valueStr != "" {
 				result += "N"
+			}
+		} else if typeStr == "NameAttribute" { // Java中的对象属性，全部转换为A
+			if valueStr != "" {
+				result += "A"
 			}
 		} else if typeStr == "NameVariable" { // PHP中的变量类型
 			if valueStr != "" {
@@ -186,9 +190,9 @@ func GetToken(lexer Lexer, content string) (string, error) {
 			}
 		} else if typeStr == "Punctuation" { // 运算符
 			result += valueStr
-		} else if typeStr == "LiteralNumberInteger" { // TODO：将所有的数字都替换为1，需要确认是否影响准确度
+		} else if typeStr == "LiteralNumberInteger" { // 将所有的数字都替换为1，需要确认是否影响准确度
 			result += "1"
-		} else if typeStr == "LiteralNumberFloat" { // TODO：将所有的浮点数都替换为1.0，需要确认是否影响准确度
+		} else if typeStr == "LiteralNumberFloat" { // 将所有的浮点数都替换为1.0，需要确认是否影响准确度
 			result += "1.0"
 		} else {
 			result += valueStr
