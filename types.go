@@ -7,12 +7,14 @@ import (
 
 //go:generate stringer -type TokenType
 
-// TokenType is the type of token to highlight.
-//
-// It is also an Emitter, emitting a single token of itself
+// TokenType 要高亮的token的类型
+// 同时也是一个 Emitter 发射器, 发射一个token字符串信号，这个token字符串就是它自己
 type TokenType int
 
+// MarshalJSON 实现JSON序列化功能
 func (t TokenType) MarshalJSON() ([]byte, error) { return json.Marshal(t.String()) }
+
+// UnmarshalJSON 实现JSON反序列化功能
 func (t *TokenType) UnmarshalJSON(data []byte) error {
 	key := ""
 	err := json.Unmarshal(data, &key)
@@ -28,43 +30,30 @@ func (t *TokenType) UnmarshalJSON(data []byte) error {
 	return fmt.Errorf("unknown TokenType %q", data)
 }
 
-// Set of TokenTypes.
+// token类型集合
 //
 // Categories of types are grouped in ranges of 1000, while sub-categories are in ranges of 100. For
 // example, the literal category is in the range 3000-3999. The sub-category for literal strings is
 // in the range 3100-3199.
 
-// Meta token types.
+// token元类型
 const (
-	// Default background style.
-	Background TokenType = -1 - iota
-	// PreWrapper style.
-	PreWrapper
-	// Line style.
-	Line
-	// Line numbers in output.
-	LineNumbers
-	// Line numbers in output when in table.
-	LineNumbersTable
-	// Line higlight style.
-	LineHighlight
-	// Line numbers table wrapper style.
-	LineTable
-	// Line numbers table TD wrapper style.
-	LineTableTD
-	// Code line wrapper style.
-	CodeLine
-	// Input that could not be tokenised.
-	Error
-	// Other is used by the Delegate lexer to indicate which tokens should be handled by the delegate.
-	Other
-	// No highlighting.
-	None
-	// Used as an EOF marker / nil token
-	EOFType TokenType = 0
+	Background       TokenType = -1 - iota // 默认背景样式
+	PreWrapper                             // 预包装样式
+	Line                                   // 行样式
+	LineNumbers                            // 行号
+	LineNumbersTable                       // 表格行号
+	LineHighlight                          // 行高亮样式
+	LineTable                              // 表格行包裹样式
+	LineTableTD                            // 表格行TD样式
+	CodeLine                               // 代码行样式
+	Error                                  // 错误
+	Other                                  // 其他
+	None                                   // 不高亮
+	EOFType          TokenType = 0         // 结束
 )
 
-// Keywords.
+// 关键字
 const (
 	Keyword TokenType = 1000 + iota
 	KeywordConstant
@@ -75,7 +64,7 @@ const (
 	KeywordType
 )
 
-// Names.
+// 名称
 const (
 	Name TokenType = 2000 + iota
 	NameAttribute

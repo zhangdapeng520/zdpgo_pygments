@@ -1,5 +1,7 @@
 package styles
 
+import "github.com/zhangdapeng520/zdpgo_pygments"
+
 // Base16Snazzy style
 var Base16Snazzy = Register(zdpgo_pygments.MustNewStyle("base16-snazzy", zdpgo_pygments.StyleEntries{
 	zdpgo_pygments.Comment:                  "#78787e",

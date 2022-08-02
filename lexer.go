@@ -59,10 +59,10 @@ type Config struct {
 	Priority float32
 }
 
-// Token output to formatter.
+// Token 输出格式
 type Token struct {
-	Type  TokenType `json:"type"`
-	Value string    `json:"value"`
+	Type  TokenType `json:"type"`  // token的类型
+	Value string    `json:"value"` // token的值
 }
 
 func (t *Token) String() string   { return t.Value }
