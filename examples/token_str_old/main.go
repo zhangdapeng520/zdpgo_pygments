@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	filePath := "examples/test_data/level1_1.java"
+	filePath := "examples/test_data/level1_1.php"
 	result, err := zdpgo_clearcode.ClearCode(filePath)
 	if err != nil {
 		panic(err)
@@ -78,9 +78,19 @@ func main() {
 				}
 			}
 			doubleCount++
-		} else if typeStr == "LiteralStringDouble" { // PHP的双引号
+		} else if typeStr == "LiteralStringDouble" { // PHP/Python的双引号
+			// python的双引号会连续出现3个
 			if valueStr != "" {
-				s += "S"
+				if lexer.Config().Name == "Python" {
+					// 双引号会连续出现3个：" 内容 "
+					if doubleCount%3 == 0 {
+						s += "S"
+						doubleCount = 0 // 重置，防止该数过大
+					}
+					doubleCount++
+				} else {
+					s += "S"
+				}
 			}
 		} else if typeStr == "LiteralStringSingle" { // 所有单引号变成G
 			// 在Python中这里会连续出现3个

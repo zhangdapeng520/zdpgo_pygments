@@ -1,4 +1,3 @@
-// Package quick provides simple, no-configuration source code highlighting.
 package quick
 
 import (

@@ -172,9 +172,18 @@ func GetToken(lexer Lexer, content string) (string, error) {
 				}
 			}
 			doubleCount++
-		} else if typeStr == "LiteralStringDouble" { // PHP的双引号
+		} else if typeStr == "LiteralStringDouble" { // PHP/Python的双引号
 			if valueStr != "" {
-				result += "S"
+				if lexer.Config().Name == "Python" {
+					// Python双引号会连续出现3个：" 内容 "
+					if doubleCount%3 == 0 {
+						result += "S"
+						doubleCount = 0 // 重置，防止该数过大
+					}
+					doubleCount++
+				} else {
+					result += "S"
+				}
 			}
 		} else if typeStr == "LiteralStringSingle" { // 所有单引号变成G
 			// 在Python中这里会连续出现3个
