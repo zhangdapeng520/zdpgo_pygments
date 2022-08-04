@@ -1,10 +1,11 @@
-package zdpgo_pygments
+package main
 
 import (
 	"fmt"
-	"github.com/zhangdapeng520/zdpgo_pygments/lexers"
 	"io/ioutil"
 	"testing"
+
+	"github.com/zhangdapeng520/zdpgo_pygments/lexers"
 )
 
 func TestLexer(t *testing.T) {
