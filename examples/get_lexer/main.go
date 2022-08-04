@@ -3,12 +3,11 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"testing"
 
 	"github.com/zhangdapeng520/zdpgo_pygments/lexers"
 )
 
-func TestLexer(t *testing.T) {
+func main() {
 	// 读取文件内容
 	filename := "examples/test_data/level1_1.py"
 	text, err := ioutil.ReadFile(filename)
