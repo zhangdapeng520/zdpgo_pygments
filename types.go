@@ -5,8 +5,6 @@ import (
 	"fmt"
 )
 
-//go:generate stringer -type TokenType
-
 // TokenType 要高亮的token的类型
 // 同时也是一个 Emitter 发射器, 发射一个token字符串信号，这个token字符串就是它自己
 type TokenType int

@@ -3,10 +3,11 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
+
 	"github.com/zhangdapeng520/zdpgo_pygments/formatters"
 	"github.com/zhangdapeng520/zdpgo_pygments/quick"
 	"github.com/zhangdapeng520/zdpgo_pygments/styles"
-	"log"
 )
 
 func main() {

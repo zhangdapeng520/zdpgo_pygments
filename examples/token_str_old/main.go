@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/zhangdapeng520/zdpgo_clearcode"
-	"github.com/zhangdapeng520/zdpgo_pygments/lexers"
+	"io/ioutil"
 	"strings"
+
+	"github.com/zhangdapeng520/zdpgo_pygments/lexers"
 )
 
 func main() {
 	filePath := "examples/test_data/level1_1.php"
-	result, err := zdpgo_clearcode.ClearCode(filePath)
+	result, err := ioutil.ReadFile(filePath)
 	if err != nil {
 		panic(err)
 	}
@@ -18,7 +19,7 @@ func main() {
 	lexer := lexers.Match(filePath)
 
 	// 词法分析
-	tokenise, err := lexer.Tokenise(nil, result)
+	tokenise, err := lexer.Tokenise(nil, string(result))
 	if err != nil {
 		panic(err)
 	}

@@ -1,6 +1,8 @@
 package zdpgo_pygments
 
-import "strings"
+import (
+	"strings"
+)
 
 // GetToken 使用指定的词法分析器和代码内容获取token
 func GetToken(lexer Lexer, content string) (string, error) {
@@ -22,7 +24,7 @@ func GetToken(lexer Lexer, content string) (string, error) {
 		valueStr := strings.TrimSpace(token.Value)
 
 		// 忽略空格和注释
-		if typeStr == "Text" { // 忽略空格和注释
+		if typeStr == "Text" || typeStr == "CommentSingle" || typeStr == "CommentMultiline" { // 忽略空格和注释
 			result += ""
 		} else if typeStr == "Keyword" { // 关键字
 			result += valueStr
