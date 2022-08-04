@@ -3,9 +3,9 @@ package quick
 import (
 	"io"
 
+	"github.com/zhangdapeng520/zdpgo_lexers"
 	"github.com/zhangdapeng520/zdpgo_pygments"
 	"github.com/zhangdapeng520/zdpgo_pygments/formatters"
-	"github.com/zhangdapeng520/zdpgo_pygments/lexers"
 	"github.com/zhangdapeng520/zdpgo_pygments/styles"
 )
 
@@ -14,12 +14,12 @@ import (
 // Lexer, formatter and style may be empty, in which case a best-effort is made.
 func Highlight(w io.Writer, source, lexer, formatter, style string) error {
 	// Determine lexer.
-	l := lexers.Get(lexer)
+	l := zdpgo_lexers.Get(lexer)
 	if l == nil {
-		l = lexers.Analyse(source)
+		l = zdpgo_lexers.Analyse(source)
 	}
 	if l == nil {
-		l = lexers.Fallback
+		l = zdpgo_lexers.Fallback
 	}
 	l = zdpgo_pygments.Coalesce(l)
 

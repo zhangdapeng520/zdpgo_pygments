@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"github.com/zhangdapeng520/zdpgo_pygments/lexers"
+	"github.com/zhangdapeng520/zdpgo_lexers"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	}
 
 	//lexer := lexers.Get("py")
-	lexer := lexers.Match(filePath)
+	lexer := zdpgo_lexers.Match(filePath)
 
 	// 词法分析
 	tokenise, err := lexer.Tokenise(nil, string(result))
