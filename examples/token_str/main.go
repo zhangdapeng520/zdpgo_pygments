@@ -10,9 +10,9 @@ import (
 
 func main() {
 	suffixes := []string{
-		".java",
+		//".java",
 		// ".py",
-		// ".php",
+		".php",
 		// ".c",
 		// ".cpp",
 	}
@@ -22,8 +22,12 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
+
 		lexer := zdpgo_lexers.Match(filePath)
 		token, err := zdpgo_pygments.GetToken(lexer, string(result))
+
+		s := "<?php $name = $email = $gender = $comment = $website = ''; ?>"
+		token, err = zdpgo_pygments.GetToken(lexer, s)
 		if err != nil {
 			fmt.Println("获取token失败：", err)
 			return

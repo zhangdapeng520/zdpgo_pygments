@@ -24,8 +24,10 @@ func GetToken(lexer Lexer, content string) (string, error) {
 		valueStr := strings.TrimSpace(token.Value)
 
 		// 忽略空格和注释
-		if typeStr == "Text" || typeStr == "CommentSingle" || typeStr == "CommentMultiline" { // 忽略空格和注释
+		if typeStr == "CommentSingle" || typeStr == "CommentMultiline" { // 忽略空格和注释
 			result += ""
+		} else if typeStr == "Text" { // 无法解析的文本内容
+			result += valueStr
 		} else if typeStr == "Keyword" { // 关键字
 			result += valueStr
 		} else if typeStr == "NameClass" { // Java：所有的类名改为C
@@ -92,9 +94,20 @@ func GetToken(lexer Lexer, content string) (string, error) {
 func GetTokenArr(lexer Lexer, contents []string) ([]string, error) {
 	var results []string
 	for _, content := range contents {
+		// 处理PHP，解决无法获取token的问题
+		isHandlePHP := lexer.Config().Name == "PHTML" && !strings.Contains(content, "<?php")
+		if isHandlePHP {
+			content = "<?php " + content + " ?>"
+		}
 		token, err := GetToken(lexer, content)
 		if err != nil {
 			return nil, err
+		}
+
+		// 处理token
+		if isHandlePHP {
+			token = strings.Replace(token, "<?php", "", 1)
+			token = strings.Replace(token, "?>", "", 1)
 		}
 		results = append(results, token)
 	}
