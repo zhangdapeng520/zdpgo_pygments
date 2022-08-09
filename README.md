@@ -1,6 +1,8 @@
 # zdpgo_pygments
 
-词法分析，类似于 Python 的 pygment，基于 zdpgo_pygments 二次开发
+词法分析，类似于 Python 的 pygments，专用于各类编程语言的词法分析
+
+
 
 ## 版本历史
 
@@ -13,3 +15,4 @@
 - v0.1.6 2022/08/04 优化：抽离 lexers
 - v0.1.7 2022/08/04 升级：词法分析器升级
 - v0.1.8 2022/08/08 BUG修复：修复无法解析PHP数组token的BUG
+- v0.1.9 2022/08/09 BUG修复：修复PHP词法分析单引号无法正常解析的BUG

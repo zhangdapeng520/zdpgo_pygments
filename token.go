@@ -32,6 +32,10 @@ func GetToken(lexer Lexer, content string) (string, error) {
 			result += valueStr
 		} else if typeStr == "NameClass" { // Java：所有的类名改为C
 			result += "C"
+		} else if typeStr == "NameOther" { // 所有其他变量名称为“O”
+			if valueStr != "" {
+				result += "O"
+			}
 		} else if typeStr == "Name" { // 所有变量名称为“N”
 			if valueStr != "" {
 				result += "N"
@@ -44,11 +48,11 @@ func GetToken(lexer Lexer, content string) (string, error) {
 			if valueStr != "" {
 				result += "N"
 			}
-		} else if typeStr == "LiteralString" { // 所有双引号都变成S
+		} else if typeStr == "LiteralString" { // 所有双引号都变成D
 			// 双引号会连续出现3个：" 内容 "
 			if doubleCount%3 == 0 {
 				if valueStr != "" {
-					result += "S"
+					result += "D"
 				}
 			}
 			doubleCount++
@@ -57,22 +61,29 @@ func GetToken(lexer Lexer, content string) (string, error) {
 				if lexer.Config().Name == "Python" {
 					// Python双引号会连续出现3个：" 内容 "
 					if doubleCount%3 == 0 {
-						result += "S"
+						result += "D"
 						doubleCount = 0 // 重置，防止该数过大
 					}
 					doubleCount++
 				} else {
+					result += "D"
+				}
+			}
+		} else if typeStr == "LiteralStringSingle" { // 所有单引号变成S
+			// 在Python中这里会连续出现3个
+			if lexer.Config().Name == "Python" {
+				if singleCount%3 == 0 {
+					if valueStr != "" {
+						result += "S"
+					}
+				}
+				singleCount++
+			} else {
+				if valueStr != "" {
 					result += "S"
 				}
 			}
-		} else if typeStr == "LiteralStringSingle" { // 所有单引号变成G
-			// 在Python中这里会连续出现3个
-			if singleCount%3 == 0 {
-				if valueStr != "" {
-					result += "G"
-				}
-			}
-			singleCount++
+
 		} else if typeStr == "NameFunction" { // 用户定义的函数名为“F”
 			if valueStr != "" {
 				result += "F"
