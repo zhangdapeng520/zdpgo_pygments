@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"strings"
 
+	"github.com/zhangdapeng520/zdpgo_clearcode"
 	"github.com/zhangdapeng520/zdpgo_lexers"
 	"github.com/zhangdapeng520/zdpgo_pygments"
 )
@@ -11,27 +12,28 @@ import (
 func main() {
 	suffixes := []string{
 		//".java",
-		// ".py",
+		//".py",
 		".php",
-		// ".c",
-		// ".cpp",
+		//".c",
+		//".cpp",
 	}
 	for _, suffix := range suffixes {
 		filePath := "examples/test_data/level1_1" + suffix
-		result, err := ioutil.ReadFile(filePath)
+		result, err := zdpgo_clearcode.ClearCode(filePath)
 		if err != nil {
 			panic(err)
 		}
 
 		lexer := zdpgo_lexers.Match(filePath)
-		token, err := zdpgo_pygments.GetToken(lexer, string(result))
+		contents := strings.Split(string(result), "\n")
+		tokenArr, err := zdpgo_pygments.GetTokenArr(lexer, contents)
 
-		//s := "<?php $name = $email = $gender = $comment = $website = ''; ?>"
-		//token, err = zdpgo_pygments.GetToken(lexer, s)
 		if err != nil {
 			fmt.Println("获取token失败：", err)
 			return
 		}
-		fmt.Println(token)
+
+		tokenS := strings.Join(tokenArr, "")
+		fmt.Println(tokenS)
 	}
 }

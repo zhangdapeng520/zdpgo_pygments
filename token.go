@@ -1,22 +1,24 @@
 package zdpgo_pygments
 
 import (
+	"bytes"
 	"strings"
+)
+
+var (
+	removeOperator = map[string]bool{";": true, ",": true, ".": true}
 )
 
 // GetToken 使用指定的词法分析器和代码内容获取token
 func GetToken(lexer Lexer, content string) (string, error) {
-	var (
-		result      string
-		singleCount int // 单引号数量
-		doubleCount int // 双引号数量
-	)
-
 	// 词法分析
 	tokenise, err := lexer.Tokenise(nil, content)
 	if err != nil {
 		return "", err
 	}
+
+	// 处理token
+	var buf bytes.Buffer
 
 	for _, token := range tokenise.Tokens() {
 		// 获取类型字符串
@@ -24,81 +26,51 @@ func GetToken(lexer Lexer, content string) (string, error) {
 		valueStr := strings.TrimSpace(token.Value)
 
 		// 忽略空格和注释
-		if typeStr == "CommentSingle" || typeStr == "CommentMultiline" { // 忽略空格和注释
-			result += ""
-		} else if typeStr == "Text" { // 无法解析的文本内容
-			result += valueStr
-		} else if typeStr == "Keyword" { // 关键字
-			result += valueStr
+		if typeStr == "CommentSingle" || // 忽略单行注释
+			typeStr == "CommentMultiline" || // 忽略多行注释
+			typeStr == "Text" || // 忽略无法解析的文本
+			typeStr == "NameNamespace" || // 忽略名称空间
+			typeStr == "KeywordNamespace" || // Java名称空间关键字
+			valueStr == "" { // 忽略空字符串
+			continue
+		} else if typeStr == "NameDecorator" { // 注解
+			buf.WriteString("@Z")
+		} else if typeStr == "Keyword" ||
+			typeStr == "KeywordDeclaration" { // 关键字
+			buf.WriteString("K")
+		} else if typeStr == "KeywordType" { // Java类型关键字
+			buf.WriteString("T")
+		} else if typeStr == "Operator" { // 运算符
+			if _, ok := removeOperator[valueStr]; !ok {
+				buf.WriteString(valueStr)
+			}
 		} else if typeStr == "NameClass" { // Java：所有的类名改为C
-			result += "C"
+			buf.WriteString("C")
 		} else if typeStr == "NameOther" { // 所有其他变量名称为“O”
-			if valueStr != "" {
-				result += "O"
-			}
-		} else if typeStr == "Name" { // 所有变量名称为“N”
-			if valueStr != "" {
-				result += "N"
-			}
+			buf.WriteString("O")
+		} else if typeStr == "Name" ||
+			typeStr == "NameVariable" { // 所有变量名称为“N”
+			buf.WriteString("N")
 		} else if typeStr == "NameAttribute" { // Java中的对象属性，全部转换为A
-			if valueStr != "" {
-				result += "A"
-			}
-		} else if typeStr == "NameVariable" { // PHP中的变量类型
-			if valueStr != "" {
-				result += "N"
-			}
-		} else if typeStr == "LiteralString" { // 所有双引号都变成D
-			// 双引号会连续出现3个：" 内容 "
-			if doubleCount%3 == 0 {
-				if valueStr != "" {
-					result += "D"
-				}
-			}
-			doubleCount++
-		} else if typeStr == "LiteralStringDouble" { // PHP/Python的双引号
-			if valueStr != "" {
-				if lexer.Config().Name == "Python" {
-					// Python双引号会连续出现3个：" 内容 "
-					if doubleCount%3 == 0 {
-						result += "D"
-						doubleCount = 0 // 重置，防止该数过大
-					}
-					doubleCount++
-				} else {
-					result += "D"
-				}
-			}
+			buf.WriteString("A")
+		} else if typeStr == "LiteralString" || // 所有双引号都变成D
+			typeStr == "LiteralStringDouble" {
+			buf.WriteString("D")
 		} else if typeStr == "LiteralStringSingle" { // 所有单引号变成S
-			// 在Python中这里会连续出现3个
-			if lexer.Config().Name == "Python" {
-				if singleCount%3 == 0 {
-					if valueStr != "" {
-						result += "S"
-					}
-				}
-				singleCount++
-			} else {
-				if valueStr != "" {
-					result += "S"
-				}
-			}
-
+			buf.WriteString("S")
 		} else if typeStr == "NameFunction" { // 用户定义的函数名为“F”
-			if valueStr != "" {
-				result += "F"
-			}
+			buf.WriteString("F")
 		} else if typeStr == "Punctuation" { // 运算符
-			result += valueStr
+			buf.WriteString(valueStr)
 		} else if typeStr == "LiteralNumberInteger" { // 将所有的数字都替换为1，需要确认是否影响准确度
-			result += "1"
-		} else if typeStr == "LiteralNumberFloat" { // 将所有的浮点数都替换为1.0，需要确认是否影响准确度
-			result += "1.0"
+			buf.WriteString("1")
+		} else if typeStr == "LiteralNumberFloat" { // 将所有的浮点数都替换为2，需要确认是否影响准确度
+			buf.WriteString("2")
 		} else {
-			result += valueStr
+			buf.WriteString(valueStr)
 		}
 	}
-	return result, nil
+	return buf.String(), nil
 }
 
 // GetTokenArr 获取token数组
@@ -120,7 +92,11 @@ func GetTokenArr(lexer Lexer, contents []string) ([]string, error) {
 			token = strings.Replace(token, "<?php", "", 1)
 			token = strings.Replace(token, "?>", "", 1)
 		}
-		results = append(results, token)
+
+		// token不为空，才追加
+		if token != "" {
+			results = append(results, token)
+		}
 	}
 	return results, nil
 }
