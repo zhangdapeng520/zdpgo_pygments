@@ -31,6 +31,7 @@ func GetToken(lexer Lexer, content string) (string, error) {
 			typeStr == "Text" || // 忽略无法解析的文本
 			typeStr == "NameNamespace" || // 忽略名称空间
 			typeStr == "KeywordNamespace" || // Java名称空间关键字
+			typeStr == "CommentPreproc" || // PHP前缀标识符，<?php
 			valueStr == "" { // 忽略空字符串
 			continue
 		} else if typeStr == "NameDecorator" { // 注解
@@ -60,8 +61,8 @@ func GetToken(lexer Lexer, content string) (string, error) {
 			buf.WriteString("S")
 		} else if typeStr == "NameFunction" { // 用户定义的函数名为“F”
 			buf.WriteString("F")
-		} else if typeStr == "Punctuation" { // 运算符
-			buf.WriteString(valueStr)
+		} else if typeStr == "Punctuation" { // PHP的,;等运算符
+			buf.WriteString("P")
 		} else if typeStr == "LiteralNumberInteger" { // 将所有的数字都替换为1，需要确认是否影响准确度
 			buf.WriteString("1")
 		} else if typeStr == "LiteralNumberFloat" { // 将所有的浮点数都替换为2，需要确认是否影响准确度
