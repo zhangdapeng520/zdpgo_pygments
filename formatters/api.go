@@ -19,6 +19,7 @@ var (
 		}
 		return nil
 	}))
+
 	// Default HTML formatter outputs self-contained HTML.
 	htmlFull = Register("html", html.New(html.Standalone(true), html.WithClasses(true))) // nolint
 	SVG      = Register("svg", svg.New(svg.EmbedFont("Liberation Mono", svg.FontLiberationMono, svg.WOFF)))
@@ -27,10 +28,10 @@ var (
 // Fallback formatter.
 var Fallback = NoOp
 
-// Registry of Formatters.
+// Registry 格式化的存储对象
 var Registry = map[string]zdpgo_pygments.Formatter{}
 
-// Names of registered formatters.
+// Names 获取所有的格式化名称
 func Names() []string {
 	out := []string{}
 	for name := range Registry {
@@ -40,9 +41,7 @@ func Names() []string {
 	return out
 }
 
-// Get formatter by name.
-//
-// If the given formatter is not found, the Fallback formatter will be returned.
+// Get 根据名字获取格式化对象
 func Get(name string) zdpgo_pygments.Formatter {
 	if f, ok := Registry[name]; ok {
 		return f
@@ -50,7 +49,7 @@ func Get(name string) zdpgo_pygments.Formatter {
 	return Fallback
 }
 
-// Register a named formatter.
+// Register 注册一个格式化对象
 func Register(name string, formatter zdpgo_pygments.Formatter) zdpgo_pygments.Formatter {
 	Registry[name] = formatter
 	return formatter
